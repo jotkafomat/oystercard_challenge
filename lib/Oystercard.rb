@@ -1,14 +1,18 @@
 class Oystercard
-attr_reader :balance
+attr_reader :balance, :maximum_limit
 
-DEFAULT_BALANCE = 0
+INITIAL_BALANCE = 0
+BALANCE_LIMIT = 90
 
-def initialize(balance = DEFAULT_BALANCE)
+def initialize(balance = INITIAL_BALANCE, maximum_limit = BALANCE_LIMIT)
   @balance = balance
+  @maximum_limit = maximum_limit
 end
 
 def top_up(value)
-  @balance += value 
+  raise "Maximum balance is £90" if (@balance + value) > @maximum_limit
+  @balance += value
+
 end
 
 end
