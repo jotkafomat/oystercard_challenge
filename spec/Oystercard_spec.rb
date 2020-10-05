@@ -17,4 +17,12 @@ describe Oystercard do
 
       expect { subject.top_up(100) }.to raise_error "Maximum balance is £#{subject.maximum_limit}. You can top up only £#{subject.maximum_limit - subject.balance}"
     end
+
+    it { is_expected.to respond_to(:deduct).with(1).argument }
+
+    it 'deduct a fare from the balance' do
+      subject.top_up(20)
+      expect(subject.deduct(2)).to eq 18
+    end
+
 end
