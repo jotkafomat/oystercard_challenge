@@ -1,5 +1,5 @@
 require './Oystercard.rb'
 
-describe do
-  
+describe Oystercard do
+
 end
