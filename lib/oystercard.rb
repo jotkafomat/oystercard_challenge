@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class Oystercard
   attr_reader :balance, :maximum_limit
 
@@ -12,9 +10,7 @@ class Oystercard
   end
 
   def top_up(value)
-    if (@balance + value) > @maximum_limit
-      raise "Maximum balance is £#{maximum_limit}. You can top up only £#{maximum_limit - balance}"
-    end
+    raise "Maximum balance is £#{maximum_limit}." if (@balance + value) > @maximum_limit
 
     @balance += value
   end

@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-require 'Oystercard'
+require 'oystercard'
 
 describe Oystercard do
   it 'should have a balance of zero' do
@@ -15,7 +13,8 @@ describe Oystercard do
   end
 
   it 'should not exceed the balance of £90' do
-    expect { subject.top_up(100) }.to raise_error "Maximum balance is £#{subject.maximum_limit}. You can top up only £#{subject.maximum_limit - subject.balance}"
+    expect { subject.top_up(100) }
+      .to raise_error "Maximum balance is £#{subject.maximum_limit}."
   end
 
   it { is_expected.to respond_to(:deduct).with(1).argument }
