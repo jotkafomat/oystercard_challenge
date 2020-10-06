@@ -1,7 +1,5 @@
 require 'oystercard'
 
-
-
 describe Oystercard do
   it 'should have a balance of zero' do
     expect(subject.balance).to eq 0
@@ -17,18 +15,18 @@ describe Oystercard do
   it "should not exceed the balance of #{Oystercard::BALANCE_LIMIT}" do
     maximum_limit = Oystercard::BALANCE_LIMIT
     subject.top_up(maximum_limit)
-    expect  {subject.top_up(1) }.to raise_error("Maximum balance is £#{subject.maximum_limit}.")
+    expect { subject.top_up(1) }.to raise_error("Maximum balance is £#{subject.maximum_limit}.")
   end
 
   it 'initializes with a default in_use state of "false"' do
     expect(subject).to_not be_in_journey
   end
   describe '#deduct' do
-let(:station) { double :entry_station }
+    let(:station) { double :entry_station }
     it 'deducts a fare from a balance' do
       subject.top_up(10)
       subject.touch_in(:station)
-      expect { subject.touch_out }.to change {subject.balance}.by (-(Oystercard::MINIMUM_FARE))
+      expect { subject.touch_out }.to change { subject.balance }.by(-Oystercard::MINIMUM_FARE)
     end
   end
   describe '#touch_in' do
@@ -41,7 +39,7 @@ let(:station) { double :entry_station }
     end
     it 'raises error if insufficient funds on the card' do
       error_message = "Error: Unsufficient funds available. Minimum £#{Oystercard::MINIMUM_FARE} needed..."
-      expect { subject.touch_in(:station)}.to raise_error(error_message)
+      expect { subject.touch_in(:station) }.to raise_error(error_message)
     end
   end
   describe '#touch_out' do
@@ -77,13 +75,13 @@ let(:station) { double :entry_station }
     end
   end
 
-    describe '#entry_station' do
-      let(:station) { double :entry_station }
-      it 'records an entry station to variable' do
-        subject.top_up(10)
-        subject.touch_in(:station)
-      expect(subject.updates_station(:station)).to eq(:station)
-      end
+  describe '#entry_station' do
+    let(:station) { double :entry_station }
+    it 'records an entry station to variable' do
+      subject.top_up(10)
+      subject.touch_in(:station)
+    expect(subject.updates_station(:station)).to eq(:station)
     end
-
+  end
+  
 end

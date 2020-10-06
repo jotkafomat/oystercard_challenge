@@ -18,6 +18,7 @@ class Oystercard
 
   def touch_in(station)
     fail "Error: Unsufficient funds available. Minimum £1 needed..." if @balance < MINIMUM_FARE
+
     updates_station(station)
   end
 
@@ -38,6 +39,5 @@ class Oystercard
   def deduct(amount = 0)
     @balance -= amount
   end
-
 
 end
