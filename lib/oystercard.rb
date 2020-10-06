@@ -3,6 +3,7 @@ class Oystercard
 
   INITIAL_BALANCE = 0
   BALANCE_LIMIT = 90
+  MINIMUM_FARE = 1
 
   def initialize(balance = INITIAL_BALANCE, maximum_limit = BALANCE_LIMIT)
     @balance = balance
@@ -15,7 +16,23 @@ class Oystercard
     @balance += value
   end
 
-  def deduct(fare)
-    @balance -= fare
+  def touch_in
+    fail "Error: Unsufficient funds available. Minimum £1 needed..." if @balance < MINIMUM_FARE
+    @card_use_status = true
+
   end
+
+  def touch_out
+    deduct(MINIMUM_FARE)
+    @card_use_status = false
+  end
+
+  def in_journey?
+    @card_use_status
+  end
+  private
+  def deduct(amount = 0)
+    @balance -= amount
+  end
+
 end
