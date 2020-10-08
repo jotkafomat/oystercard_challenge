@@ -1,13 +1,13 @@
-require 'oystercard'
+require "oystercard"
 
 describe Oystercard do
-  it 'should have a balance of zero' do
+  it "should have a balance of zero" do
     expect(subject.balance).to eq 0
   end
 
   it { is_expected.to respond_to(:top_up).with(1).argument }
 
-  it 'should increase balance by 20' do
+  it "should increase balance by 20" do
     subject.top_up(20)
     expect(subject.balance).to eq 20
   end
@@ -21,15 +21,21 @@ describe Oystercard do
   it 'initializes with a default in_use state of "false"' do
     expect(subject).to_not be_in_journey
   end
-  describe '#deduct' do
+
+  it "starts with an empty journey history" do
+    expect(subject.journey_history).to be_empty
+  end
+
+  describe "#deduct" do
     let(:station) { double :entry_station }
-    it 'deducts a fare from a balance' do
+    it "deducts a fare from a balance" do
       subject.top_up(10)
       subject.touch_in(:station)
       expect { subject.touch_out(:station) }.to change { subject.balance }.by(-Oystercard::MINIMUM_FARE)
     end
   end
-  describe '#touch_in' do
+
+  describe "#touch_in" do
     let(:station) { double :entry_station }
 
     it { is_expected.to respond_to(:touch_in).with(1).argument }
@@ -39,15 +45,14 @@ describe Oystercard do
       subject.touch_in(:station)
       expect(subject).to be_in_journey
     end
-    it 'raises error if insufficient funds on the card' do
+    it "raises error if insufficient funds on the card" do
       error_message = "Error: Unsufficient funds available. Minimum £#{Oystercard::MINIMUM_FARE} needed..."
       expect { subject.touch_in(:station) }.to raise_error(error_message)
     end
   end
-  describe '#touch_out' do
-    let(:station) { double :entry_station }
+  describe "#touch_out" do
+    let(:station) { double :station }
     let(:station2) { double :station }
-
 
     it { is_expected.to respond_to(:touch_out) }
 
@@ -59,7 +64,7 @@ describe Oystercard do
       subject.touch_out(:station)
       expect(subject).to_not be_in_journey
     end
-    it 'changes the current station to nil' do
+    it "changes the current station to nil" do
       subject.top_up(10)
       subject.touch_in(:station)
       subject.touch_out(:station)
@@ -69,11 +74,21 @@ describe Oystercard do
       subject.top_up(10)
       subject.touch_in(:station)
       subject.touch_out(:station2)
-      expect(subject.trip).to eq({"entry_station" => :station, "exit_station" => :station2})
+      expect(subject.trip).to eq({ "entry_station" => :station, "exit_station" => :station2 })
     end
-
+    it "stores the journey in the journey history" do
+      subject.top_up(10)
+      subject.touch_in(:station)
+      subject.touch_out(:station2)
+      expect(subject.journey_history).to include({ "entry_station" => :station, "exit_station" => :station2 })
+    end
+    it "only stores one extra journey" do
+      subject.top_up(10)
+      subject.touch_in(:station)
+      expect { subject.touch_out(:station2) }.to change { subject.journey_history.length }.by(1)
+    end
   end
-  describe '#in_journey?' do
+  describe "#in_journey?" do
     let(:station) { double :entry_station }
     it { is_expected.to respond_to(:in_journey?) }
     it 'displays card_use_status as "false" on initialization' do
@@ -89,5 +104,4 @@ describe Oystercard do
       expect(subject).to_not be_in_journey
     end
   end
-
 end
