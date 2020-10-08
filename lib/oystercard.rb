@@ -1,5 +1,5 @@
 class Oystercard
-  attr_reader :balance, :maximum_limit, :current_station
+  attr_reader :balance, :maximum_limit, :entry_station, :trip
 
   INITIAL_BALANCE = 0
   BALANCE_LIMIT = 90
@@ -11,28 +11,31 @@ class Oystercard
   end
 
   def top_up(value)
-    raise "Maximum balance is £#{maximum_limit}." if (@balance + value) > @maximum_limit
+    error_message = "Maximum balance is £#{maximum_limit}."
+    raise error_message if (@balance + value) > @maximum_limit
 
     @balance += value
   end
 
   def touch_in(station)
-    fail "Error: Unsufficient funds available. Minimum £1 needed..." if @balance < MINIMUM_FARE
+    error_message = "Error: Unsufficient funds available. Minimum £#{MINIMUM_FARE} needed..."
 
-    updates_station(station)
+    fail error_message if @balance < MINIMUM_FARE
+
+    @entry_station = station
   end
 
-  def touch_out
+  def touch_out(station)
     deduct(MINIMUM_FARE)
-    updates_station(nil)
+    @entry_station = nil
+    @trip = {"entry_station" => entry_station, "exit_station" => station}
   end
 
   def in_journey?
-    !!current_station
-  end
-
-  def updates_station(entry_station)
-    @current_station = entry_station
+    # It returns true if the
+    # object on the right is not nil and not false,
+    # false if it is nil or false
+    !!entry_station
   end
 
   private

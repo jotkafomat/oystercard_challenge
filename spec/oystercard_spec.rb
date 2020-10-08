@@ -26,12 +26,14 @@ describe Oystercard do
     it 'deducts a fare from a balance' do
       subject.top_up(10)
       subject.touch_in(:station)
-      expect { subject.touch_out }.to change { subject.balance }.by(-Oystercard::MINIMUM_FARE)
+      expect { subject.touch_out(:station) }.to change { subject.balance }.by(-Oystercard::MINIMUM_FARE)
     end
   end
   describe '#touch_in' do
     let(:station) { double :entry_station }
-    it { is_expected.to respond_to(:touch_in) }
+
+    it { is_expected.to respond_to(:touch_in).with(1).argument }
+
     it 'changes card_use_status to "true" when called' do
       subject.top_up(10)
       subject.touch_in(:station)
@@ -44,19 +46,32 @@ describe Oystercard do
   end
   describe '#touch_out' do
     let(:station) { double :entry_station }
+    let(:station2) { double :station }
+
+
     it { is_expected.to respond_to(:touch_out) }
+
+    it { is_expected.to respond_to(:touch_out).with(1).argument }
+
     it 'changes card_use_status back to "false" when called' do
       subject.top_up(10)
       subject.touch_in(:station)
-      subject.touch_out
+      subject.touch_out(:station)
       expect(subject).to_not be_in_journey
     end
     it 'changes the current station to nil' do
       subject.top_up(10)
       subject.touch_in(:station)
-      subject.touch_out
-      expect(subject.current_station).to eq(nil)
+      subject.touch_out(:station)
+      expect(subject.entry_station).to eq(nil)
     end
+    it "create a trip hash" do
+      subject.top_up(10)
+      subject.touch_in(:station)
+      subject.touch_out(:station2)
+      expect(subject.trip).to eq({"entry_station" => :station, "exit_station" => :station2})
+    end
+
   end
   describe '#in_journey?' do
     let(:station) { double :entry_station }
@@ -70,18 +85,9 @@ describe Oystercard do
       expect(subject).to be_in_journey
     end
     it 'displays card_use_status as "false" after touch_out' do
-      subject.touch_out
+      subject.touch_out(:station)
       expect(subject).to_not be_in_journey
     end
   end
 
-  describe '#entry_station' do
-    let(:station) { double :entry_station }
-    it 'records an entry station to variable' do
-      subject.top_up(10)
-      subject.touch_in(:station)
-    expect(subject.updates_station(:station)).to eq(:station)
-    end
-  end
-  
 end
