@@ -8,6 +8,8 @@ describe Station do
 
   let (:station) { Station.new(station_name, station_zone) }
 
+
+
   it " initializes with name" do
     expect(station.name).to eq(station_name)
   end

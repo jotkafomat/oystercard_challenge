@@ -50,6 +50,8 @@ describe Oystercard do
       expect { subject.touch_in(:station) }.to raise_error(error_message)
     end
   end
+
+
   describe "#touch_out" do
     let(:station) { double :station }
     let(:station2) { double :station }
@@ -70,18 +72,21 @@ describe Oystercard do
       subject.touch_out(:station)
       expect(subject.entry_station).to eq(nil)
     end
+
     it "create a trip hash" do
       subject.top_up(10)
       subject.touch_in(:station)
       subject.touch_out(:station2)
       expect(subject.trip).to eq({ "entry_station" => :station, "exit_station" => :station2 })
     end
+
     it "stores the journey in the journey history" do
       subject.top_up(10)
       subject.touch_in(:station)
       subject.touch_out(:station2)
       expect(subject.journey_history).to include({ "entry_station" => :station, "exit_station" => :station2 })
     end
+
     it "only stores one extra journey" do
       subject.top_up(10)
       subject.touch_in(:station)

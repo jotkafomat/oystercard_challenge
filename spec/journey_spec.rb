@@ -2,14 +2,21 @@ require "journey"
 
 describe Journey do
   let(:entry_station) { double(:station) }
+  let(:oystercard) { double :oystercard }
 
-  describe "#start_journey" do
-    subject.start_journey(:entry_station)
-    expect(subject.entry_station).to eq entry_station
+  before do
+    allow(oystercard).to receive(:touch_in).and_return(entry_station)
   end
 
+  # describe "#start_journey" do
+  #   subject.start_journey(:entry_station)
+  #   expect(subject.entry_station).to eq entry_station
+  # end
+
   it "can store a entry station" do
-    subject.entry_station = station
+    oystercard.touch_in(entry_station)
+
+    expect(subject).to eq()
   end
 
   it "can store an exit station" do
