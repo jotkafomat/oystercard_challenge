@@ -13,11 +13,11 @@ describe Journey do
   #   expect(subject.entry_station).to eq entry_station
   # end
 
-  it "can store a entry station" do
-    oystercard.touch_in(entry_station)
-
-    expect(subject).to eq()
-  end
+  # it "can store a entry station" do
+  #   oystercard.touch_in(entry_station)
+  #
+  #   expect(subject).to eq()
+  # end
 
   it "can store an exit station" do
   end
