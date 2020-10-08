@@ -13,3 +13,4 @@ p my_oyster_card.entry_station
 p my_oyster_card.in_journey?
 p my_oyster_card.touch_out("victoria station")
 p my_oyster_card.journey_history
+p victoria_station = Station.new
