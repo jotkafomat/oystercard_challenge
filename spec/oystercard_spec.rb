@@ -51,7 +51,6 @@ describe Oystercard do
     end
   end
 
-
   describe "#touch_out" do
     let(:station) { double :station }
     let(:station2) { double :station }
